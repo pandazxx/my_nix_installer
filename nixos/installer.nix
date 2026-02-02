@@ -10,7 +10,7 @@
     if builtins.pathExists sshKeysPath
     then import sshKeysPath
     else {
-      username = "nixos";
+      username = "nixos_default";
       authorized_keys = [];
     };
 in {
