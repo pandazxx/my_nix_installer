@@ -36,6 +36,7 @@ in {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"];
     openssh.authorizedKeys.keys = authorizedKeys;
+    shell = pkgs.zsh;
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -53,7 +54,7 @@ in {
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Keep ISO output name stable for scripts.
-  isoImage.isoName = "nixos-installer.iso";
+  image.fileName = "nixos-installer.iso";
 
   system.stateVersion = "25.11";
 }
