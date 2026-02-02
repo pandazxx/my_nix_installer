@@ -4,7 +4,13 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
-nix build .#packages.x86_64-linux.installerIso
+keys_path="${1:-}"
+if [[ -n "$keys_path" ]]; then
+  nix build .#packages.x86_64-linux.installerIso \
+    --override-input local-keys "path:${keys_path}"
+else
+  nix build .#packages.x86_64-linux.installerIso
+fi
 
 out_path="$(python3 -c 'import os; print(os.path.realpath("result"))')"
 

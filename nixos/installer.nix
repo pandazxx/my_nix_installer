@@ -3,16 +3,23 @@
   pkgs,
   lib,
   modulesPath,
+  inputs,
   ...
 }: let
-  sshKeysPath = ./.ssh_keys.nix;
+  sshKeysPath = inputs.local-keys;
   sshKeys =
     if builtins.pathExists sshKeysPath
     then import sshKeysPath
     else {
-      username = "nixos_default";
+      username = "nixos";
       authorized_keys = [];
     };
+  repoSrc = lib.cleanSourceWith {
+    src = ../.;
+    filter = path: type:
+      let base = builtins.baseNameOf path;
+      in base != ".git" && base != "result";
+  };
 in {
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
@@ -44,7 +51,7 @@ in {
       workstation = true;
     };
   };
-  services.getty.autologinUser = "nixos";
+  services.getty.autologinUser = sshKeys.username;
 
   users.users.${sshKeys.username} = {
     isNormalUser = true;
@@ -69,6 +76,9 @@ in {
 
   # Keep ISO output name stable for scripts.
   image.fileName = "nixos-installer.iso";
+  isoImage.contents = [
+    { source = repoSrc; target = "/opt/nixos_installer"; }
+  ];
 
   system.stateVersion = "25.11";
 }
