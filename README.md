@@ -16,13 +16,21 @@ A project to build a NixOS installer ISO and manage NixOS configurations. Defaul
   Convenience wrapper around the same build and prints the output path.
 
 ## Configure SSH access
-The installer reads SSH user and keys from the flake input `local-keys`.
+The installer reads SSH user and keys from a Nix file path provided at build time.
 
-- Default input: `nixos/ssh_keys.nix.sample` (no keys).
-- To use your own keys, pass an override when building:
+- Create a Nix file like:
+  ```nix
+  {
+    username = "nixos";
+    authorized_keys = [
+      "ssh-ed25519 AAAA... user@host"
+    ];
+  }
+  ```
+- Build with:
   ```sh
-  nix build .#packages.x86_64-linux.installerIso \
-    --override-input local-keys path:/absolute/path/to/ssh_keys.nix
+  NIXOS_INSTALLER_SSH_KEYS=/absolute/path/to/ssh_keys.nix \
+    nix build .#packages.x86_64-linux.installerIso
   ```
 Password auth is disabled by default.
 

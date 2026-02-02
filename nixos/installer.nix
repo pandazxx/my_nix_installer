@@ -3,10 +3,17 @@
   pkgs,
   lib,
   modulesPath,
-  inputs,
   ...
 }: let
-  sshKeys = import inputs.local-keys;
+  defaultSshKeys = {
+    username = "nixos";
+    authorized_keys = [];
+  };
+  sshKeysPath = builtins.getEnv "NIXOS_INSTALLER_SSH_KEYS";
+  sshKeys =
+    if sshKeysPath != "" && builtins.pathExists sshKeysPath
+    then import sshKeysPath
+    else defaultSshKeys;
   repoSrc = lib.cleanSourceWith {
     src = ../.;
     filter = path: type:
