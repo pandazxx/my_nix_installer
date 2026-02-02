@@ -44,7 +44,7 @@ in {
       workstation = true;
     };
   };
-  services.getty.autologinUser = sshKeys.username;
+  services.getty.autologinUser = lib.mkForce sshKeys.username;
 
   users.users.${sshKeys.username} = {
     isNormalUser = true;
