@@ -9,9 +9,10 @@
   sshKeys = installerSecrets;
   repoSrc = lib.cleanSourceWith {
     src = ../.;
-    filter = path: type:
-      let base = builtins.baseNameOf path;
-      in base != ".git" && base != "result";
+    filter = path: type: let
+      base = builtins.baseNameOf path;
+    in
+      base != ".git" && base != "result";
   };
 in {
   imports = [
@@ -27,6 +28,7 @@ in {
   time.timeZone = "UTC";
   i18n.defaultLocale = "en_US.UTF-8";
   console.keyMap = "us";
+  boot.loader.systemd-boot.enable = true; # (for UEFI systems only)
 
   services.openssh.enable = true;
   services.openssh.settings = {
@@ -70,7 +72,10 @@ in {
   # Keep ISO output name stable for scripts.
   image.fileName = "nixos-installer.iso";
   isoImage.contents = [
-    { source = repoSrc; target = "/opt/nixos_installer"; }
+    {
+      source = repoSrc;
+      target = "/opt/nixos_installer";
+    }
   ];
 
   system.stateVersion = "25.11";

@@ -29,8 +29,8 @@ The installer reads SSH user and keys from a Nix file path provided at build tim
   ```
 - Build with:
   ```sh
-  NIXOS_INSTALLER_SSH_KEYS=/absolute/path/to/ssh_keys.nix \
-    nix build .#packages.x86_64-linux.installerIso
+  nix build .#packages.x86_64-linux.installerIso \
+    --override-input installer-secrets path:/absolute/path/to/ssh_keys.nix
   ```
 Password auth is disabled by default.
 
@@ -82,7 +82,20 @@ The installer ISO does not format disks automatically. You must select the targe
    ```sh
    sudo nixos-install
    ```
-8. Reboot:
+8. To install using this repo as a flake, run:
+   ```sh
+   sudo nixos-install --flake /opt/nixos_installer#installer
+   ```
+9. To fetch this flake from GitHub (example), you can clone it onto the installer and install directly:
+   ```sh
+   git clone https://github.com/example/nixos_installer.git /opt/nixos_installer
+   sudo nixos-install --flake /opt/nixos_installer#installer
+   ```
+10. To install without cloning (example), point directly at the GitHub flake:
+    ```sh
+    sudo nixos-install --flake github:example/nixos_installer#installer
+    ```
+11. Reboot:
    ```sh
    sudo reboot
    ```
