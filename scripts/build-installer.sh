@@ -6,8 +6,8 @@ cd "$repo_root"
 
 keys_path="${1:-}"
 if [[ -n "$keys_path" ]]; then
-  NIXOS_INSTALLER_SSH_KEYS="$keys_path" \
-    nix build .#packages.x86_64-linux.installerIso
+  nix build .#packages.x86_64-linux.installerIso \
+    --override-input installer-secrets "path:$keys_path"
 else
   nix build .#packages.x86_64-linux.installerIso
 fi
