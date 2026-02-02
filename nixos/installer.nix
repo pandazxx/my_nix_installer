@@ -34,6 +34,15 @@ in {
     PasswordAuthentication = false;
     KbdInteractiveAuthentication = false;
   };
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+    };
+  };
   services.getty.autologinUser = "nixos";
 
   users.users.${sshKeys.username} = {
