@@ -31,6 +31,7 @@ in {
     PasswordAuthentication = false;
     KbdInteractiveAuthentication = false;
   };
+  services.getty.autologinUser = "nixos";
 
   users.users.nixos = {
     isNormalUser = true;
