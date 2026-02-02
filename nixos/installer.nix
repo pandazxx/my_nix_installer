@@ -5,11 +5,14 @@
   modulesPath,
   ...
 }: let
-  authorizedKeysPath = ./.ssh_authorized_keys;
-  authorizedKeys =
-    if builtins.pathExists authorizedKeysPath
-    then lib.filter (line: line != "") (lib.splitString "\n" (builtins.readFile authorizedKeysPath))
-    else [];
+  sshKeysPath = ./.ssh_keys.nix;
+  sshKeys =
+    if builtins.pathExists sshKeysPath
+    then import sshKeysPath
+    else {
+      username = "nixos";
+      authorized_keys = [];
+    };
 in {
   imports = [
     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
@@ -33,10 +36,10 @@ in {
   };
   services.getty.autologinUser = "nixos";
 
-  users.users.nixos = {
+  users.users.${sshKeys.username} = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager"];
-    openssh.authorizedKeys.keys = authorizedKeys;
+    openssh.authorizedKeys.keys = sshKeys.authorized_keys;
     shell = pkgs.zsh;
   };
 

@@ -16,7 +16,7 @@ A project to build a NixOS installer ISO and manage NixOS configurations. Defaul
   Convenience wrapper around the same build and prints the output path.
 
 ## Configure SSH access
-Add your public key in `nixos/.ssh_authorized_keys`. One key per line as per `~/.ssh/authorized_keys` format. This file is ignored by git. Password auth is disabled by default.
+Copy `nixos/ssh_keys.nix.sample` to `nixos/.ssh_keys.nix`, then set the username and authorized keys. Password auth is disabled by default.
 
 ## Configure software
 
