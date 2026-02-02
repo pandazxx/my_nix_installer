@@ -6,14 +6,7 @@
   inputs,
   ...
 }: let
-  sshKeysPath = inputs.local-keys;
-  sshKeys =
-    if builtins.pathExists sshKeysPath
-    then import sshKeysPath
-    else {
-      username = "nixos";
-      authorized_keys = [];
-    };
+  sshKeys = import inputs.local-keys;
   repoSrc = lib.cleanSourceWith {
     src = ../.;
     filter = path: type:
